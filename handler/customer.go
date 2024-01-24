@@ -72,7 +72,7 @@ func GetAllCustomer(c *gin.Context) {
 	}
 
 	if len(matchedCust) > 0 {
-		c.JSON(http.StatusOK, matchedCust)
+		c.JSON(http.StatusOK, gin.H{"data": matchedCust})
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Custommer not found"})
 	}
@@ -94,21 +94,22 @@ func UpdateCustomer(c *gin.Context) {
 		return
 	}
 
-	query := "UPDATE MST_CUSTOMER SET name = $2, no_hp = $3, address = $4 WHERE id = $1"
+	query := "UPDATE MST_CUSTOMER SET name = $2, no_hp = $3, address = $4 WHERE id = $1 RETURNING id"
 
-	_, err = db.Query(query, custId, cust.Name, cust.Phone, cust.Address)
+	err = db.QueryRow(query, custId, cust.Name, cust.Phone, cust.Address).Scan(&cust.Id)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "data not found"})
+		return
 	}
 
-	cust.Id = custId
-	c.JSON(http.StatusOK, gin.H{"status": "update success", "data": cust})
+	c.JSON(http.StatusOK, gin.H{"update success": cust.Id})
 }
 
 func DeleteCustomer(c *gin.Context) {
-	pathParams := c.Param("id")
+	var cust entity.Customer
 
+	pathParams := c.Param("id")
 	param, err := strconv.Atoi(pathParams)
 
 	if err != nil {
@@ -116,30 +117,14 @@ func DeleteCustomer(c *gin.Context) {
 		return
 	}
 
-	query := "DELETE FROM MST_CUSTOMER WHERE id = $1"
+	query := "DELETE FROM MST_CUSTOMER WHERE id = $1 RETURNING id"
 
-	rows, err := db.Query(query, param)
+	err = db.QueryRow(query, param).Scan(&cust.Id)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"status": err.Error()})
 		return
 	}
 
-	var matchedCustomer []entity.Customer
-	for rows.Next() {
-		var customer entity.Customer
-		err := rows.Scan(param)
-
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
-			return
-		}
-		matchedCustomer = append(matchedCustomer, customer)
-	}
-
-	if len(matchedCustomer) > 0 {
-		c.JSON(http.StatusOK, gin.H{"status": "delete success", "id": param})
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "customer not found"})
-	}
+	c.JSON(http.StatusOK, gin.H{"status": "delete success", "id": cust.Id})
 }
