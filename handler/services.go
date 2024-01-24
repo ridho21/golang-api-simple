@@ -4,6 +4,7 @@ import (
 	"challenge-goapi/entity"
 	"database/sql"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -44,7 +45,7 @@ func GetAllServices(c *gin.Context) {
 	var err error
 
 	if params != "" {
-		query += " WHERE name ILIKE '%' || $1 || '%'"
+		query += " WHERE service ILIKE '%' || $1 || '%'"
 		rows, err = db.Query(query, params)
 	} else {
 		rows, err = db.Query(query)
@@ -74,4 +75,27 @@ func GetAllServices(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Services not found"})
 	}
+}
+
+func DeleteServices(c *gin.Context) {
+	var serv entity.Services
+
+	queryParams := c.Query("id")
+	param, err := strconv.Atoi(queryParams)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	query := "DELETE FROM MST_SERVICES WHERE id = $1 RETURNING id"
+
+	err = db.QueryRow(query, param).Scan(&serv.Id)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "delete success", "id": serv.Id})
 }

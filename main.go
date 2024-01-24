@@ -23,12 +23,14 @@ func main() {
 		{
 			serviceRoute.GET("/", handler.GetAllServices)
 			serviceRoute.POST("/", handler.AddService)
+			serviceRoute.DELETE("/", handler.DeleteServices)
 		}
 
 		trnRoute := groupRouter.Group("/transaction")
 		{
-			// trnRoute.GET("/", handler.GetTransaction)
+			trnRoute.GET("/", handler.GetTransactions)
 			trnRoute.POST("/", handler.AddTransaction)
+			trnRoute.DELETE("/", handler.DeleteTransactions)
 		}
 	}
 
