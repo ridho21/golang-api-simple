@@ -80,7 +80,7 @@ func GetTransactions(c *gin.Context) {
 func DeleteTransactions(c *gin.Context) {
 	var transaction entity.Laundry
 
-	queryParams := c.Query("id")
+	queryParams := c.Param("id")
 	param, err := strconv.Atoi(queryParams)
 
 	if err != nil {

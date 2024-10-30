@@ -9,7 +9,7 @@ Install Go https://go.dev/dl
 - Clone the project with the following command
 
 ```
-git clone https://git.enigmacamp.com/enigma-20/ridho-mahendra/challenge-goapi.git
+git clone https://github.com/ridho21/golang-api-simple.git
 ```
 
 - Get required module with this command
@@ -30,8 +30,8 @@ go get github.com/gin-gonic/gin
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "postgres"
-	password = "root"
+	user     = // adjust with your db username
+	password = // adjust with your db password
 	dbname   = "enigma_laundry"
 )
 ```
@@ -63,48 +63,33 @@ Response :
   "data": [
     {
       "id": 1,
-      "name": "string",
-      "phone": "string",
-      "address": "string"
+      "name": "Ridho",
+      "phone": "91289031",
+      "address": "Malay"
     },
     {
       "id": 2,
-      "name": "String",
-      "phone": "String",
-      "address": "String"
-    }
-  ]
-}
-```
-
-#### Get Customer by Name
-
-Request :
-
-- Method : GET
-- Endpoint : `api/customer/:name`
-- Header :
-  - Accept : application/json
-
-Response :
-
-- Status : 200 OK
-- Body :
-
-```json
-{
-  "data": [
+      "name": "Mahendra",
+      "phone": "22131",
+      "address": "Malay"
+    },
     {
-      "id": 2,
-      "name": "string",
-      "phone": "string",
-      "address": "string"
+      "id": 10,
+      "name": "qwawse",
+      "phone": "",
+      "address": "qwe12"
     },
     {
       "id": 3,
-      "name": "String",
-      "phone": "String",
-      "address": "String"
+      "name": "Mahendra",
+      "phone": "08127127",
+      "address": "DIY"
+    },
+    {
+      "id": 0,
+      "name": "mahendra",
+      "phone": "0222221111",
+      "address": "kulim 9"
     }
   ]
 }
@@ -264,34 +249,6 @@ Response :
 ]
 ```
 
-#### Get Transaction by id
-
-Request :
-
-- Method : GET
-- Endpoint : `api/transaction?id=`
-- Header :
-  - Accept : application/json
-
-Response :
-
-- Status : 200 OK
-- Body :
-
-```json
-[
-    {
-        "id": 9,
-        "unit": "string",
-        "amount": 2,
-        "date_in": "2023-01-20T00:00:00Z",
-        "date_out": "2023-01-23T00:00:00Z",
-        "id_customer": 0,
-        "id_service": 9
-    }
-]
-```
-
 #### Delete Transaction by id
 
 Request :
@@ -353,35 +310,6 @@ Request :
 
 - Method : GET
 - Endpoint : `api/service`
-- Header :
-  - Accept : application/json
-
-Response :
-
-- Status : 200 OK
-- Body :
-
-```json
-[
-    {
-        "id": 3,
-        "service": "string",
-        "price": 10000
-    },
-    {
-        "id": 5,
-        "service": "string",
-        "price": 4000
-    }
-]
-```
-
-#### Get Service by name of service
-
-Request :
-
-- Method : GET
-- Endpoint : `api/service?service=`
 - Header :
   - Accept : application/json
 

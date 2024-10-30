@@ -80,7 +80,7 @@ func GetAllServices(c *gin.Context) {
 func DeleteServices(c *gin.Context) {
 	var serv entity.Services
 
-	queryParams := c.Query("id")
+	queryParams := c.Param("id")
 	param, err := strconv.Atoi(queryParams)
 
 	if err != nil {
